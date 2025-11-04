@@ -19,7 +19,6 @@
         <!-- 登录表单 -->
         <div v-show="show === 'login'" class="form-content">
           <div class="form-group">
-            <label class="form-label label-green">{{ $t('emailAccount') }}</label>
             <div class="input-wrapper">
               <el-input 
                 :class="settingStore.settings.loginDomain === 0 ? 'email-input' : ''" 
@@ -54,7 +53,6 @@
           </div>
           
           <div class="form-group">
-            <label class="form-label label-orange">{{ $t('password') }}</label>
             <el-input 
               v-model="form.password" 
               :placeholder="$t('password')" 
@@ -77,7 +75,6 @@
         <!-- 注册表单 -->
         <div v-show="show !== 'login'" class="form-content">
           <div class="form-group">
-            <label class="form-label label-green">{{ $t('emailAccount') }}</label>
             <div class="input-wrapper">
               <el-input 
                 class="email-input" 
@@ -112,7 +109,6 @@
           </div>
           
           <div class="form-group">
-            <label class="form-label label-orange">{{ $t('password') }}</label>
             <el-input 
               v-model="registerForm.password" 
               :placeholder="$t('password')" 
@@ -121,7 +117,6 @@
           </div>
           
           <div class="form-group">
-            <label class="form-label label-purple">{{ $t('confirmPwd') }}</label>
             <el-input 
               v-model="registerForm.confirmPassword" 
               :placeholder="$t('confirmPwd')" 
@@ -130,7 +125,6 @@
           </div>
           
           <div class="form-group" v-if="settingStore.settings.regKey === 0 || settingStore.settings.regKey === 2">
-            <label class="form-label label-blue">{{ settingStore.settings.regKey === 0 ? $t('regKey') : $t('regKeyOptional') }}</label>
             <el-input 
               v-model="registerForm.code" 
               :placeholder="settingStore.settings.regKey === 0 ? $t('regKey') : $t('regKeyOptional')" 
