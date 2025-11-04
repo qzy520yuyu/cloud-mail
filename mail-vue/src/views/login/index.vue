@@ -554,7 +554,8 @@ function submitRegister() {
   
   :deep(.el-input__inner) {
     height: 40px;
-    padding: 0 15px;
+    padding-left: 0 !important;
+    padding-right: 15px;
     text-align: left;
   }
   
