@@ -1,83 +1,143 @@
 <template>
   <div id="login-box">
-    <div id="background-wrap" v-if="!settingStore.settings.background">
-      <div class="x1 cloud"></div>
-      <div class="x2 cloud"></div>
-      <div class="x3 cloud"></div>
-      <div class="x4 cloud"></div>
-      <div class="x5 cloud"></div>
-    </div>
-    <div v-else :style="background"></div>
-    <div class="form-wrapper">
-      <div class="container">
-        <span class="form-title">{{ settingStore.settings.title }}</span>
-        <span class="form-desc" v-if="show === 'login'">{{ $t('loginTitle') }}</span>
-        <span class="form-desc" v-else>{{ $t('regTitle') }}</span>
-        <div v-show="show === 'login'">
-          <el-input :class="settingStore.settings.loginDomain === 0 ? 'email-input' : ''" v-model="form.email"
-                    type="text" :placeholder="$t('emailAccount')" autocomplete="off">
-            <template #append v-if="settingStore.settings.loginDomain === 0">
-              <div @click.stop="openSelect">
-                <el-select
-                    v-if="show === 'login'"
-                    ref="mySelect"
-                    v-model="suffix"
-                    :placeholder="$t('select')"
-                    class="select"
-                >
-                  <el-option
-                      v-for="item in domainList"
-                      :key="item"
-                      :label="item"
-                      :value="item"
-                  />
-                </el-select>
-                <div style="color: var(--el-text-color-primary)">
-                  <span>{{ suffix }}</span>
-                  <Icon class="setting-icon" icon="mingcute:down-small-fill" width="20" height="20"/>
-                </div>
-              </div>
-            </template>
-          </el-input>
-          <el-input v-model="form.password" :placeholder="$t('password')" type="password" autocomplete="off">
-          </el-input>
-          <el-button class="btn" type="primary" @click="submit" :loading="loginLoading"
-          >{{ $t('loginBtn') }}
-          </el-button>
+    <div class="login-container">
+      <div class="login-card">
+        <div class="logo-section">
+          <svg class="server-icon" viewBox="0 0 24 24" width="60" height="60">
+            <rect x="2" y="3" width="20" height="5" rx="1" fill="#5dade2"/>
+            <rect x="2" y="10" width="20" height="5" rx="1" fill="#5dade2"/>
+            <circle cx="5" cy="5.5" r="0.8" fill="white"/>
+            <circle cx="7" cy="5.5" r="0.8" fill="white"/>
+            <circle cx="5" cy="12.5" r="0.8" fill="white"/>
+            <circle cx="7" cy="12.5" r="0.8" fill="white"/>
+          </svg>
         </div>
-        <div v-show="show !== 'login'">
-          <el-input class="email-input" v-model="registerForm.email" type="text" :placeholder="$t('emailAccount')"
-                    autocomplete="off">
-            <template #append>
-              <div @click.stop="openSelect">
-                <el-select
-                    v-if="show !== 'login'"
-                    ref="mySelect"
-                    v-model="suffix"
-                    :placeholder="$t('select')"
-                    class="select"
-                >
-                  <el-option
-                      v-for="item in domainList"
-                      :key="item"
-                      :label="item"
-                      :value="item"
-                  />
-                </el-select>
-                <div>
-                  <span>{{ suffix }}</span>
-                  <Icon class="setting-icon" icon="mingcute:down-small-fill" width="20" height="20"/>
-                </div>
-              </div>
-            </template>
-          </el-input>
-          <el-input v-model="registerForm.password" :placeholder="$t('password')" type="password" autocomplete="off"/>
-          <el-input v-model="registerForm.confirmPassword" :placeholder="$t('confirmPwd')" type="password"
-                    autocomplete="off"/>
-          <el-input v-if="settingStore.settings.regKey === 0" v-model="registerForm.code" :placeholder="$t('regKey')"
-                    type="text" autocomplete="off"/>
-          <el-input v-if="settingStore.settings.regKey === 2" v-model="registerForm.code"
-                    :placeholder="$t('regKeyOptional')" type="text" autocomplete="off"/>
+        
+        <h1 class="form-title">{{ settingStore.settings.title }}</h1>
+        <p class="form-subtitle">{{ show === 'login' ? $t('loginTitle') : $t('regTitle') }}</p>
+        
+        <!-- 登录表单 -->
+        <div v-show="show === 'login'" class="form-content">
+          <div class="form-group">
+            <label class="form-label label-green">{{ $t('emailAccount') }}</label>
+            <div class="input-wrapper">
+              <el-input 
+                :class="settingStore.settings.loginDomain === 0 ? 'email-input' : ''" 
+                v-model="form.email"
+                type="text" 
+                :placeholder="$t('emailAccount')" 
+                autocomplete="off">
+                <template #append v-if="settingStore.settings.loginDomain === 0">
+                  <div @click.stop="openSelect">
+                    <el-select
+                        v-if="show === 'login'"
+                        ref="mySelect"
+                        v-model="suffix"
+                        :placeholder="$t('select')"
+                        class="select"
+                    >
+                      <el-option
+                          v-for="item in domainList"
+                          :key="item"
+                          :label="item"
+                          :value="item"
+                      />
+                    </el-select>
+                    <div style="color: var(--el-text-color-primary)">
+                      <span>{{ suffix }}</span>
+                      <Icon class="setting-icon" icon="mingcute:down-small-fill" width="20" height="20"/>
+                    </div>
+                  </div>
+                </template>
+              </el-input>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label label-orange">{{ $t('password') }}</label>
+            <el-input 
+              v-model="form.password" 
+              :placeholder="$t('password')" 
+              type="password" 
+              autocomplete="off">
+            </el-input>
+          </div>
+          
+          <el-button class="btn btn-primary" type="primary" @click="submit" :loading="loginLoading">
+            <Icon icon="mingcute:arrow-right-fill" width="18" height="18" style="margin-right: 5px"/>
+            {{ $t('loginBtn') }}
+          </el-button>
+          
+          <div class="switch-link" v-if="settingStore.settings.register === 0">
+            {{ $t('noAccount') }} 
+            <span class="link-button" @click="show = 'register'">{{ $t('regSwitch') }}</span>
+          </div>
+        </div>
+        
+        <!-- 注册表单 -->
+        <div v-show="show !== 'login'" class="form-content">
+          <div class="form-group">
+            <label class="form-label label-green">{{ $t('emailAccount') }}</label>
+            <div class="input-wrapper">
+              <el-input 
+                class="email-input" 
+                v-model="registerForm.email" 
+                type="text" 
+                :placeholder="$t('emailAccount')"
+                autocomplete="off">
+                <template #append>
+                  <div @click.stop="openSelect">
+                    <el-select
+                        v-if="show !== 'login'"
+                        ref="mySelect"
+                        v-model="suffix"
+                        :placeholder="$t('select')"
+                        class="select"
+                    >
+                      <el-option
+                          v-for="item in domainList"
+                          :key="item"
+                          :label="item"
+                          :value="item"
+                      />
+                    </el-select>
+                    <div>
+                      <span>{{ suffix }}</span>
+                      <Icon class="setting-icon" icon="mingcute:down-small-fill" width="20" height="20"/>
+                    </div>
+                  </div>
+                </template>
+              </el-input>
+            </div>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label label-orange">{{ $t('password') }}</label>
+            <el-input 
+              v-model="registerForm.password" 
+              :placeholder="$t('password')" 
+              type="password" 
+              autocomplete="off"/>
+          </div>
+          
+          <div class="form-group">
+            <label class="form-label label-purple">{{ $t('confirmPwd') }}</label>
+            <el-input 
+              v-model="registerForm.confirmPassword" 
+              :placeholder="$t('confirmPwd')" 
+              type="password"
+              autocomplete="off"/>
+          </div>
+          
+          <div class="form-group" v-if="settingStore.settings.regKey === 0 || settingStore.settings.regKey === 2">
+            <label class="form-label label-blue">{{ settingStore.settings.regKey === 0 ? $t('regKey') : $t('regKeyOptional') }}</label>
+            <el-input 
+              v-model="registerForm.code" 
+              :placeholder="settingStore.settings.regKey === 0 ? $t('regKey') : $t('regKeyOptional')" 
+              type="text" 
+              autocomplete="off"/>
+          </div>
+          
           <div v-show="verifyShow"
                class="register-turnstile"
                :data-sitekey="settingStore.settings.siteKey"
@@ -88,16 +148,16 @@
           >
             <span style="font-size: 12px;color: #F56C6C" v-if="botJsError">{{ $t('verifyModuleFailed') }}</span>
           </div>
-          <el-button class="btn" type="primary" @click="submitRegister" :loading="registerLoading"
-          >{{ $t('regBtn') }}
+          
+          <el-button class="btn btn-primary" type="primary" @click="submitRegister" :loading="registerLoading">
+            {{ $t('regBtn') }}
           </el-button>
-        </div>
-        <template v-if="settingStore.settings.register === 0">
-          <div class="switch" @click="show = 'register'" v-if="show === 'login'">{{ $t('noAccount') }}
-            <span>{{ $t('regSwitch') }}</span></div>
-          <div class="switch" @click="show = 'login'" v-else>{{ $t('hasAccount') }} <span>{{ $t('loginSwitch') }}</span>
+          
+          <div class="switch-link" v-if="settingStore.settings.register === 0">
+            {{ $t('hasAccount') }} 
+            <span class="link-button" @click="show = 'login'">{{ $t('loginSwitch') }}</span>
           </div>
-        </template>
+        </div>
       </div>
     </div>
   </div>
@@ -176,22 +236,6 @@ window.loadAfter = (e) => {
 window.loadBefore = (e) => {
   console.log('loadBefore')
 }
-
-const loginOpacity = computed(() => {
-  const opacity = settingStore.settings.loginOpacity
-  return uiStore.dark ? `rgba(0, 0, 0, ${opacity})` : `rgba(255, 255, 255, ${opacity})`
-})
-
-const background = computed(() => {
-
-  return settingStore.settings.background ? {
-    'background-image': `url(${cvtR2Url(settingStore.settings.background)})`,
-    'background-repeat': 'no-repeat',
-    'background-size': 'cover',
-    'background-position': 'center'
-  } : ''
-})
-
 
 const openSelect = () => {
   mySelect.value.toggleMenu()
@@ -394,108 +438,189 @@ function submitRegister() {
 
 <style lang="scss" scoped>
 
-.form-wrapper {
-  position: fixed;
-  right: 0;
-  height: 100%;
-  z-index: 10;
+#login-box {
+  background: linear-gradient(135deg, #e8eaf6 0%, #f5f5f5 100%);
+  font-family: Arial, sans-serif;
+  height: 100vh;
+  margin: 0;
+  padding: 0;
   display: flex;
   align-items: center;
   justify-content: center;
-  @media (max-width: 767px) {
-    width: 100%;
-  }
+  overflow: hidden;
 }
 
-.container {
-  background: v-bind(loginOpacity);
-  padding-left: 40px;
-  padding-right: 40px;
+.login-container {
   display: flex;
-  flex-direction: column;
+  align-items: center;
   justify-content: center;
-  width: 450px;
-  height: 100%;
-  border-left: 1px solid var(--login-border);
-  box-shadow: var(--el-box-shadow-light);
-  @media (max-width: 1024px) {
-    padding: 20px 18px;
-    width: 384px;
-    margin-left: 18px;
-  }
+  width: 100%;
+  padding: 20px;
+}
+
+.login-card {
+  background: white;
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.12);
+  padding: 48px 40px;
+  width: 100%;
+  max-width: 440px;
+  
   @media (max-width: 767px) {
-    border: 1px solid var(--login-border);
-    padding: 20px 18px;
-    border-radius: 6px;
-    height: fit-content;
-    width: 100%;
-    margin-right: 18px;
-    margin-left: 18px;
-  }
-
-  .btn {
-    height: 36px;
-    width: 100%;
-    border-radius: 6px;
-  }
-
-  .form-desc {
-    margin-top: 5px;
-    margin-bottom: 18px;
-    color: var(--form-desc-color);
-  }
-
-  .form-title {
-    font-weight: bold;
-    font-size: 22px !important;
-  }
-
-  .switch {
-    margin-top: 20px;
-    text-align: center;
-
-    span {
-      color: var(--login-switch-color);
-      cursor: pointer;
-    }
-  }
-
-  :deep(.el-input__wrapper) {
-    border-radius: 6px;
-    background: var(--el-bg-color);
-  }
-
-  .email-input :deep(.el-input__wrapper) {
-    border-radius: 6px 0 0 6px;
-    background: var(--el-bg-color);
-  }
-
-  .el-input {
-    height: 38px;
-    width: 100%;
-    margin-bottom: 18px;
-
-    :deep(.el-input__inner) {
-      height: 36px;
-    }
+    padding: 32px 24px;
+    max-width: 100%;
   }
 }
 
-:deep(.el-select-dropdown__item) {
-  padding: 0 10px;
+.logo-section {
+  display: flex;
+  justify-content: center;
+  margin-bottom: 24px;
 }
 
-.setting-icon {
-  position: relative;
-  top: 6px;
+.server-icon {
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+}
+
+.form-title {
+  font-size: 28px;
+  font-weight: bold;
+  text-align: center;
+  color: #333;
+  margin: 0 0 8px 0;
+}
+
+.form-subtitle {
+  font-size: 14px;
+  color: #888;
+  text-align: center;
+  margin: 0 0 32px 0;
+}
+
+.form-content {
+  width: 100%;
+}
+
+.form-group {
+  margin-bottom: 20px;
+}
+
+.form-label {
+  display: inline-block;
+  padding: 4px 12px;
+  border-radius: 4px;
+  font-size: 13px;
+  font-weight: 500;
+  margin-bottom: 8px;
+  color: white;
+  
+  &.label-green {
+    background: linear-gradient(135deg, #9acd32 0%, #7cb342 100%);
+  }
+  
+  &.label-orange {
+    background: linear-gradient(135deg, #ffa726 0%, #fb8c00 100%);
+  }
+  
+  &.label-purple {
+    background: linear-gradient(135deg, #ab47bc 0%, #8e24aa 100%);
+  }
+  
+  &.label-blue {
+    background: linear-gradient(135deg, #42a5f5 0%, #1e88e5 100%);
+  }
+}
+
+.input-wrapper {
+  width: 100%;
+}
+
+:deep(.el-input__wrapper) {
+  border-radius: 8px;
+  background: var(--el-bg-color);
+  box-shadow: 0 0 0 1px #e0e0e0 inset;
+  transition: all 0.3s;
+  
+  &:hover {
+    box-shadow: 0 0 0 1px #b0b0b0 inset;
+  }
+  
+  &.is-focus {
+    box-shadow: 0 0 0 2px #5dade2 inset;
+  }
+}
+
+.email-input :deep(.el-input__wrapper) {
+  border-radius: 8px 0 0 8px;
+  background: var(--el-bg-color);
+}
+
+.el-input {
+  width: 100%;
+  
+  :deep(.el-input__inner) {
+    height: 40px;
+    padding: 0 15px;
+  }
 }
 
 :deep(.el-input-group__append) {
-  padding: 0 !important;
-  padding-left: 8px !important;
-  padding-right: 4px !important;
+  padding: 0 12px !important;
   background: var(--el-bg-color);
   border-radius: 0 8px 8px 0;
+  box-shadow: 0 0 0 1px #e0e0e0 inset;
+  cursor: pointer;
+}
+
+.btn {
+  width: 100%;
+  height: 44px;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: 500;
+  margin-top: 8px;
+  transition: all 0.3s;
+  
+  &.btn-primary {
+    background: linear-gradient(135deg, #5dade2 0%, #3498db 100%);
+    border: none;
+    
+    &:hover {
+      background: linear-gradient(135deg, #4a9fd5 0%, #2980b9 100%);
+      transform: translateY(-1px);
+      box-shadow: 0 4px 12px rgba(93, 173, 226, 0.4);
+    }
+    
+    &:active {
+      transform: translateY(0);
+    }
+  }
+}
+
+.switch-link {
+  text-align: center;
+  margin-top: 24px;
+  font-size: 14px;
+  color: #666;
+  
+  .link-button {
+    color: #e91e63;
+    background: linear-gradient(135deg, #ff4081 0%, #e91e63 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    font-weight: 500;
+    cursor: pointer;
+    padding: 4px 12px;
+    border-radius: 4px;
+    transition: all 0.3s;
+    
+    &:hover {
+      background: #e91e63;
+      -webkit-text-fill-color: white;
+      color: white;
+    }
+  }
 }
 
 .register-turnstile {
@@ -510,99 +635,13 @@ function submitRegister() {
   pointer-events: none;
 }
 
-.custom-style {
-  margin-bottom: 10px;
-}
-
-.custom-style .el-segmented {
-  --el-border-radius-base: 6px;
-  width: 180px;
-}
-
-
-#login-box {
-  background: linear-gradient(to bottom, #2980b9, #6dd5fa, #fff);
-  font: 100% Arial, sans-serif;
-  height: 100%;
-  margin: 0;
-  padding: 0;
-  overflow-x: hidden;
-  display: grid;
-  grid-template-columns: 1fr;
-}
-
-
-#background-wrap {
-  height: 100%;
-  z-index: 0;
-}
-
-@keyframes animateCloud {
-  0% {
-    margin-left: -500px;
-  }
-
-  100% {
-    margin-left: 100%;
-  }
-}
-
-.x1 {
-  animation: animateCloud 30s linear infinite;
-  transform: scale(0.65);
-}
-
-.x2 {
-  animation: animateCloud 15s linear infinite;
-  transform: scale(0.3);
-}
-
-.x3 {
-  animation: animateCloud 25s linear infinite;
-  transform: scale(0.5);
-}
-
-.x4 {
-  animation: animateCloud 13s linear infinite;
-  transform: scale(0.4);
-}
-
-.x5 {
-  animation: animateCloud 20s linear infinite;
-  transform: scale(0.55);
-}
-
-.cloud {
-  background: linear-gradient(to bottom, #fff 5%, #f1f1f1 100%);
-  border-radius: 100px;
-  box-shadow: 0 8px 5px rgba(0, 0, 0, 0.1);
-  height: 120px;
-  width: 350px;
+.setting-icon {
   position: relative;
+  top: 6px;
 }
 
-.cloud:after,
-.cloud:before {
-  content: "";
-  position: absolute;
-  background: #fff;
-  z-index: -1;
-}
-
-.cloud:after {
-  border-radius: 100px;
-  height: 100px;
-  left: 50px;
-  top: -50px;
-  width: 100px;
-}
-
-.cloud:before {
-  border-radius: 200px;
-  height: 180px;
-  width: 180px;
-  right: 50px;
-  top: -90px;
+:deep(.el-select-dropdown__item) {
+  padding: 0 10px;
 }
 
 </style>
