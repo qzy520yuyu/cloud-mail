@@ -557,6 +557,11 @@ function submitRegister() {
     padding: 0 15px;
     text-align: left;
   }
+  
+  :deep(.el-input__inner::placeholder) {
+    padding-left: 0;
+    text-indent: 0;
+  }
 }
 
 :deep(.el-input-group__append) {
